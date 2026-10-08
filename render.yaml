@@ -1,0 +1,20 @@
+# One free web service: FastAPI serves both the API and the pre-built React app.
+# No Docker, no API key, no manual env vars needed. Add GEMINI_API_KEY later (optional) for AI answers.
+services:
+  - type: web
+    name: marginalia
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: LLM_PROVIDER
+        value: auto
+      - key: DATA_DIR
+        value: /tmp/marginalia
